@@ -1,33 +1,26 @@
 <?php
 
-// Conexión a la base de datos.
+// URL del archivo SQL alojado en GitHub
+$sql_file_url = "one_piece.sql";
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "one piece";
+// Obtener el contenido del archivo SQL
+$sql_content = file_get_contents($sql_file_url);
 
-// Crear conexión.
-
-$conexion = new mysqli($servername, $username, $password, $database);
-
-// Verificar la conexión.
-
-if ($conexion->connect_error) {
-    die("Conexión fallida: " . $conexion->connect_error);
-}
-
+// Obtener el nombre enviado por GET
 $nombre = $_GET['nombre'];
 
-$query = "SELECT nombre FROM tablapersonajes WHERE nombre LIKE '%$nombre%'";
-$resultado = mysqli_query($conexion, $query);
-
+// Inicializar un array para almacenar los nombres de los personajes que coinciden
 $nombres = array();
-while ($fila = mysqli_fetch_assoc($resultado)) {
-    $nombres[] = $fila['nombre'];
+
+// Buscar el nombre en el contenido del archivo SQL
+preg_match_all("/INSERT INTO tablapersonajes \(imagen, nombre\) VALUES \('.*?', '($nombre.*?)'\);/", $sql_content, $matches);
+
+// Agregar los nombres encontrados al array $nombres
+if (!empty($matches[1])) {
+    $nombres = $matches[1];
 }
 
-// Convertimos a formato JSON.
-
+// Convertir el array a formato JSON y enviarlo como respuesta
 echo json_encode($nombres);
+
 ?>
