@@ -36,7 +36,7 @@ $(document).ready(function() {
         var inputText = $(this).val().trim();
         var xhr = new XMLHttpRequest();
         if (inputText !== '') {
-            xhr.open('GET', '/ONEPIECE/controlador/buscar_personaje.php?nombre=' + inputText, true);
+            xhr.open('GET', 'buscar_personaje.php' + inputText, true);
             xhr.onload = function() {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     var nombres = JSON.parse(xhr.responseText);
@@ -105,7 +105,7 @@ $(document).ready(function() {
         // Obtenemos la respuesta del usuario.
         var respuesta = $('#inputNombreBuscar').val().trim();
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '../controlador/validar_respuesta.php', true);
+        xhr.open('POST', 'validar_respuesta.php', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onload = function() {
             if (xhr.status >= 200 && xhr.status < 300) {
@@ -184,7 +184,7 @@ $(document).ready(function() {
     // Función para cargar una nueva imagen aleatoria.
     function cargarNuevaImagen() {
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', '../controlador/cargar_imagen_aleatoria.php', true);
+        xhr.open('GET', 'cargar_imagen_aleatoria.php', true);
         xhr.onload = function() {
             if (xhr.status >= 200 && xhr.status < 300) {
                 var respuesta = JSON.parse(xhr.responseText);
