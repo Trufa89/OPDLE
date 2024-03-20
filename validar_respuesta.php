@@ -1,47 +1,22 @@
 <?php
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "one piece";
+// URL del archivo SQL alojado en GitHub
+$sql_file_url = "one_piece.sql";
 
-$conexion = new mysqli($servername, $username, $password, $database);
+// Obtener el contenido del archivo SQL
+$sql_content = file_get_contents($sql_file_url);
 
-// Verificar la conexión.
-
-if ($conexion->connect_error) {
-    die("La conexión falló: " . $conexion->connect_error);
-}
-
-header('Content-Type: application/json');
-
-
+// Obtener la respuesta del usuario y el nombre de la imagen enviados por POST
 $respuesta_usuario = $_POST['respuesta']; 
 $nombre_imagen = $_POST['nombreImagen'];
 
-// Consulta SQL para verificar si la respuesta coincide con algún nombre de la tabla de personajes.
-
-$query = "SELECT COUNT(*) AS count FROM tablapersonajes WHERE nombre = '$respuesta_usuario' AND nombre = '$nombre_imagen'";
-
-
-
-$resultado = mysqli_query($conexion, $query);
-
-// Verificar si se encontraron resultados.
-
-if ($resultado) {
-    $fila = mysqli_fetch_assoc($resultado);
-    $count = $fila['count'];
-    
-    if ($count > 0) {
-        echo "Respuesta correcta";
-    } else {
-        echo "Respuesta incorrecta";
-    }
+// Buscar la respuesta del usuario en el contenido del archivo SQL
+if (preg_match("/INSERT INTO tablapersonajes \(imagen, nombre\) VALUES \('.*?', '$nombre_imagen'\);/", $sql_content)) {
+    // Si la respuesta del usuario coincide con el nombre de alguna imagen en el archivo SQL
+    echo "Respuesta correcta";
 } else {
-    echo "Error al verificar la respuesta";
+    // Si la respuesta del usuario no coincide con ninguna imagen en el archivo SQL
+    echo "Respuesta incorrecta";
 }
 
-
-$conexion->close();
 ?>
