@@ -160,8 +160,8 @@ a.quiz-btn:hover {
 
 @font-face {
     font-family: 'Fuenteonepiece';
-    src: url('../../tipografia/one_piece_font-webfont.woff2') format('woff2'),
-         url('../../tipografia/one_piece_font-webfont.woff') format('woff');
+    src: url('one_piece_font-webfont.woff2') format('woff2'),
+         url('one_piece_font-webfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
