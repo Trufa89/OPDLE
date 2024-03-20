@@ -1,4 +1,4 @@
-<?php require "layouts/layout.php"; ?>
+<?php require "layout.php"; ?>
 
 <body class='container my-0 justify-content-start flex-column minigame1'>
     
