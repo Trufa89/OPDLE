@@ -101,5 +101,5 @@
     <!-- Mensaje de respuestas correctas -->
     <div id="mensajeRespuestasCorrectas" class="text-center form-control btn-primary border-success text-success fw-bold mt-3 mb-3" style="max-width: 370px; margin: 0 auto;"></div>
     
-    <script src="../controlador/minigame1.js"></script>
+    <script src="minigame1.js"></script>
 </body>
