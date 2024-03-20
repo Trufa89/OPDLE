@@ -4,46 +4,32 @@
     
     <?php
     
-    // Conexión a la base de datos.
-    
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $database = "one piece";
-    $nombreImagen = "";
+    // URL del archivo SQL alojado en GitHub
+    $sql_file_url = "one_piece.sql";
 
-    $conn = new mysqli($servername, $username, $password, $database);
-    // Verifica la conexión. 
-    if ($conn->connect_error) {
-        die("La conexión falló: " . $conn->connect_error);
-    }
+    // Obtener el contenido del archivo SQL
+    $sql_content = file_get_contents($sql_file_url);
 
-    // Consulta para seleccionar una imagen aleatoria.
-    
-    $sql = "SELECT imagen, nombre FROM tablapersonajes ORDER BY RAND() LIMIT 1";
-    $result = $conn->query($sql);
+    // Buscar líneas que contengan INSERT INTO para extraer las imágenes
+    preg_match_all('/INSERT INTO tablapersonajes \(imagen, nombre\) VALUES \(\'(.*?)\', \'(.*?)\'\);/', $sql_content, $matches);
 
-    $nombreImagen = ""; 
     
-    // Verificar si se encontraron resultados.
+    // Verificar si se encontraron resultados
+    if (!empty($matches[1])) {
+        // Elegir una imagen aleatoria
+        $random_index = array_rand($matches[1]);
+        $imagen = $matches[1][$random_index];
+        $nombre = $matches[2][$random_index];
     
-    if ($result->num_rows > 0) {  
-        // Mostramos la imagen.
-        while($row = $result->fetch_assoc()) {
-            $nombreImagen = $row["nombre"];
-            echo '<div class="image-container my-2">'; 
-            echo '<img src="' . $row["imagen"] . '" alt="Imagen aleatoria" class="rounded-3" id="imagenPersonaje" style="filter: blur(25px);">';
-            echo '</div>';
-            // Establecemos el valor del campo oculto con el nombre asociado a la imagen.
-            echo '<input type="hidden" id="nombreImagen" value="' . $row["nombre"] . '">';
-        }
+        // Mostrar la imagen
+        echo '<div class="image-container my-2">'; 
+        echo '<img src="' . $imagen . '" alt="Imagen aleatoria" class="rounded-3" id="imagenPersonaje" style="filter: blur(25px);">';
+        echo '</div>';
+        // Establecer el valor del campo oculto con el nombre asociado a la imagen.
+        echo '<input type="hidden" id="nombreImagen" value="' . $nombre . '">';
     } else {
-        echo "No se encontraron imágenes en la base de datos.";
+        echo "No se encontraron imágenes en el archivo SQL.";
     }
-
-    // Cerramos la conexión
-    
-    $conn->close();
     ?>
     
      <!-- Imagenes de las oportunidades -->
