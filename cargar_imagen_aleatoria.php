@@ -1,46 +1,26 @@
 <?php
 
-// Conexión a la base de datos.
+// URL del archivo SQL alojado en GitHub
+$sql_file_url = "one_piece.sql";
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "one piece";
+// Obtener el contenido del archivo SQL
+$sql_content = file_get_contents($sql_file_url);
 
-// Crear conexión.
+// Buscar líneas que contengan INSERT INTO para extraer las imágenes
+preg_match_all('/INSERT INTO tablapersonajes \(imagen, nombre\) VALUES \(\'(.*?)\', \'(.*?)\'\);/', $sql_content, $matches);
 
-$conn = new mysqli($servername, $username, $password, $database);
-
-if ($conn->connect_error) {
-    die("La conexión falló: " . $conn->connect_error);
-}
-
-// Consulta para seleccionar una imagen aleatoria.
-
-$sql = "SELECT imagen, nombre FROM tablapersonajes ORDER BY RAND() LIMIT 1";
-$result = $conn->query($sql);
-
-if ($result === false) {
-    
-    // Si hay un error en la consulta, imprime el error y termina el script.
-    
-    die("Error en la consulta SQL: " . $conn->error);
-}
-
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $imagen = $row["imagen"];
-    $nombre = $row["nombre"];
+// Verificar si se encontraron resultados
+if (!empty($matches[1])) {
+    // Elegir una imagen aleatoria
+    $random_index = array_rand($matches[1]);
+    $imagen = $matches[1][$random_index];
+    $nombre = $matches[2][$random_index];
     $respuesta = array("imagen" => $imagen, "nombre" => $nombre);
     
-    // Convertir el array a formato JSON y enviarlo como respuesta.
-    
+    // Convertir el array a formato JSON y enviarlo como respuesta
     echo json_encode($respuesta);
 } else {
-    echo "No se encontraron imágenes en la base de datos.";
+    echo "No se encontraron imágenes en el archivo SQL.";
 }
 
-// Cerrar la conexión.
-
-$conn->close();
 ?>
